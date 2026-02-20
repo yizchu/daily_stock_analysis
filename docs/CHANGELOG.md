@@ -7,6 +7,14 @@
 
 ## [Unreleased]
 
+### 修复
+- 修复美股（如 ADBE）技术指标矛盾：akshare 美股复权数据异常，统一美股历史数据源为 YFinance（Issue #311）
+- 🐛 **美股指数实时行情与日线数据** (Issue #273)
+  - 修复 SPX、DJI、IXIC、NDX、VIX、RUT 等美股指数无法获取实时行情的问题
+  - 新增 `us_index_mapping` 模块，将用户输入（如 SPX）映射为 Yahoo Finance 符号（如 ^GSPC）
+  - 美股指数与美股股票日线数据直接路由至 YfinanceFetcher，避免遍历不支持的数据源
+  - 消除重复的美股识别逻辑，统一使用 `is_us_stock_code()` 函数
+
 ### 优化
 - 🔒 **CI 门禁统一（P0）**
   - 新增 `scripts/ci_gate.sh` 作为后端门禁单一入口
@@ -29,6 +37,10 @@
   - 新增 `AI_REVIEW_STRICT` 开关，可选将 AI 审查失败升级为阻断
 
 ### 新增
+- **大盘复盘可选区域** (Issue #299)
+  - 支持 `MARKET_REVIEW_REGION` 环境变量：cn（A股）、us（美股）、both（两者）
+  - us 模式适合仅关注美股的用户，使用 SPX/纳斯达克/道指/VIX 等指数；both 模式可同时复盘 A 股与美股
+  - 默认 cn，保持向后兼容
 - 📊 **仅分析结果摘要** (Issue #262)
   - 支持 `REPORT_SUMMARY_ONLY` 环境变量，设为 `true` 时只推送汇总，不含个股详情
   - 默认 `false`，多股时适合快速浏览
